@@ -18,7 +18,12 @@ EXECUTABLES_TST := $(patsubst $(TSTDIR)/%,$(BUILDDIR)/%,$(TST:.c=))
 
 .PHONY: all check valgrind pthread install clean
 
-all: $(EXECUTABLES_TST)
+all: exec 
+
+pthread: CFLAGS += -pthread -DUSE_PTHREAD
+pthread: exec
+
+exec: $(EXECUTABLES_TST)
 
 $(BUILDDIR)/%: $(TSTDIR)/%.c $(BUILDDIR)/libthread.so
 	@mkdir -p $(BUILDDIR)
@@ -31,10 +36,6 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.c
 $(BUILDDIR)/libthread.so: $(OBJECTS)
 	@mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
-
-pthread: CFLAGS += -DUSE_PTHREAD
-pthread: LDFLAGS += -pthread
-pthread: all
 
 check: $(EXECUTABLES_TST)
 	@for exe in $(EXECUTABLES_TST); do \
