@@ -23,9 +23,15 @@ all: exec
 pthread: CFLAGS += -pthread -DUSE_PTHREAD
 pthread: exec
 
+examples: $(EXECUTABLES_EXAMPLES)
+
 exec: $(EXECUTABLES_TST)
 
 $(BUILDDIR)/%: $(TSTDIR)/%.c $(BUILDDIR)/libthread.so
+	@mkdir -p $(BUILDDIR)
+	$(CC) $(CFLAGS) -L$(BUILDDIR) $< -lthread $(LDFLAGS) -o $@
+
+$(BUILDDIR)/%: $(EXDIR)/%.c $(BUILDDIR)/libthread.so
 	@mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) -L$(BUILDDIR) $< -lthread $(LDFLAGS) -o $@
 
