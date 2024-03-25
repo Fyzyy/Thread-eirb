@@ -17,6 +17,18 @@ Max
 - lock -> Ilyes
 - unlock -> Ilyes
 
+## Autre
+
+- Réussir à compiler example.c avec pthread
+- Faire la structure des threads
+- Choisir liste
+
+## Autre
+
+- Réussir à compiler example.c avec pthread
+- Faire la structure des threads
+- Choisir liste
+
 ## Quelle liste prendre ?
 
 - Singly-linked list -> 
