@@ -17,12 +17,13 @@ struct struct_thread_t {
     thread_t id;
     ucontext_t context;
     int stack_id;
+    void *ret_val;
 };
 
 typedef struct node
 {
     struct struct_thread_t thread;
-    TAILQ_ENTRY(node) nodes;
+    SIMPLEQ_ENTRY(node) nodes;
 } node_t;
 
 typedef SIMPLEQ_HEAD(head_s, node) thread_queue;
