@@ -27,7 +27,7 @@ Max
 
 - Singly-linked list ->
 (+) Faible coûts mémoire
-(+) Méthode d'ajout fonctionne bien avec un système FIFO
+(-) Méthode d'ajout fonctionne moyennement bien avec un système FIFO
 (-) Compléxité O(n) pour supprimer un thread en particulier (débordements de pile par ex) -> trouver une méthode pour réduire la suppression de thread ?
 
 - List ->
@@ -43,6 +43,11 @@ Max
 (-) Double pointeur pour chaque élément et deux pointeurs pour la head et la tail (haut coûts mémoire)
 (+) Suppression et ajout très simple
 (+) On peut traverser la liste dans les deux sens
+
+- Single-linked Tail queue ->
+(+) Faible coût mémoire
+(-) Compléxité élevée
+(+) En accord avec FIFO
 
 Dilemne :
 Commencer dans le dur avec des bas coûts mémoire et essayer de trouver un implémentation de nos threads qui permette de limiter la compléxité ?
