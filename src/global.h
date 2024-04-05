@@ -1,5 +1,6 @@
 #include "thread.h"
 #include "queue.h"
+#include <ucontext.h>
 
 struct struct_thread_t {
     thread_t id;
