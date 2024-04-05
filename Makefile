@@ -1,11 +1,10 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -I$(SRCDIR) -fPIC
-LDFLAGS = -shared
+CFLAGS = -Wall -Wextra -I$(SRCDIR)
+LDFLAGS = -L$(BUILDDIR)
 
 SRCDIR = src
 BUILDDIR = build
 EXDIR = examples
-INSTALLDIR = install
 TSTDIR = tst
 
 SOURCES := $(wildcard $(SRCDIR)/*.c)
@@ -16,36 +15,39 @@ TST := $(wildcard $(TSTDIR)/*.c)
 EXECUTABLES_EXAMPLES := $(patsubst $(EXDIR)/%,$(BUILDDIR)/%,$(EXAMPLES:.c=))
 EXECUTABLES_TST := $(patsubst $(TSTDIR)/%,$(BUILDDIR)/%,$(TST:.c=))
 
-.PHONY: all check valgrind pthread install clean
+.PHONY: all check valgrind pthread install clean run
 
-all: exec 
+all: LDLIBS = -L$(BUILDDIR) -lthread  
+all: install
 
 pthread: CFLAGS += -pthread -DUSE_PTHREAD
-pthread: exec
+pthread: $(EXECUTABLES_TST)
 
 examples: $(EXECUTABLES_EXAMPLES)
 
-exec: $(EXECUTABLES_TST)
 
-$(BUILDDIR)/%: $(TSTDIR)/%.c $(BUILDDIR)/libthread.so
-	@mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) -L$(BUILDDIR) $< -lthread $(LDFLAGS) -o $@
-
-$(BUILDDIR)/%: $(EXDIR)/%.c $(BUILDDIR)/libthread.so
-	@mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) -L$(BUILDDIR) $< -lthread $(LDFLAGS) -o $@
+exec: libthread.so $(EXECUTABLES_TST)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -fPIC -o $@ $<
 
-$(BUILDDIR)/libthread.so: $(OBJECTS)
+libthread.so: $(OBJECTS)
 	@mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+	$(CC) -shared -o $(BUILDDIR)/$@ $^
+
+$(BUILDDIR)/%: $(TSTDIR)/%.c
+	@mkdir -p $(BUILDDIR)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(LDLIBS) $< -o $@
+
+$(BUILDDIR)/%: $(EXDIR)/%.c
+	@mkdir -p $(BUILDDIR)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(LDLIBS) $< -o $@
 
 check: $(EXECUTABLES_TST)
 	@for exe in $(EXECUTABLES_TST); do \
-		$$exe; \
+	    echo $$exe; \
+	    $$exe; \
 	done
 
 valgrind: $(EXECUTABLES_TST)
@@ -53,10 +55,12 @@ valgrind: $(EXECUTABLES_TST)
 		valgrind --leak-check=full --show-reachable=yes --track-origins=yes $$exe; \
 	done
 
-install: $(BUILDDIR)/libthread.so $(EXECUTABLES_TST)
+install: libthread.so $(EXECUTABLES_TST)
 	@mkdir -p $(INSTALLDIR)/lib $(INSTALLDIR)/bin
-	@cp $< $(INSTALLDIR)/lib
+	@cp $(BUILDDIR)/$< $(INSTALLDIR)/lib
 	@cp $(EXECUTABLES_TST) $(INSTALLDIR)/bin
 
 clean:
 	@rm -rf $(BUILDDIR) $(INSTALLDIR)
+
+run: export LD_LIBRARY_PATH=./$(INSTALLDIR)/lib
