@@ -1,7 +1,7 @@
 #include "global.h"
 
 struct_thread_t main_thread = {
-    .id = 0,
+    .id = &main_thread,
     .context = {0},
     .start_routine = NULL,
     .arg = NULL,

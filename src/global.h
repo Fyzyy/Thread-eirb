@@ -28,4 +28,6 @@ extern struct thread_list threads;
 extern struct_thread_t main_thread;
 extern struct_thread_t *current_thread;
 
+struct_thread_t* id_to_struct(thread_t id);
+
 #endif // GLOBAL_H

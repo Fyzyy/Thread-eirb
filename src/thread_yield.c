@@ -3,6 +3,7 @@
 int thread_yield(void) {
 
     if (STAILQ_EMPTY(&threads)) {
+        current_thread = &main_thread;
         return 0;
     }
 
