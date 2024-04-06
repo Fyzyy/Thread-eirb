@@ -26,7 +26,6 @@ __attribute__((__noreturn__)) void thread_exit(void *retval) {
   fprintf(stderr, "Thread Exited.\n");
 }
 
-
 typedef struct {
   thread_mutex_t mutex;
   ucontext_t context;
