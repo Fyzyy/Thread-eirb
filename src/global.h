@@ -1,6 +1,7 @@
 #include "thread.h"
 #include "queue.h"
 #include <ucontext.h>
+#include <stddef.h>
 
 struct struct_thread_t {
     thread_t id;
@@ -15,4 +16,9 @@ typedef struct node
     SIMPLEQ_ENTRY(node) nodes;
 } node_t;
 
-STAILQ_HEAD(thread_queue, struct_thread_t) threads = STAILQ_HEAD_INITIALIZER(threads);
+#ifndef __GLOBAL_H__
+#define __GLOBAL_H__
+
+STAILQ_HEAD(thread_queue, node_t) threads = STAILQ_HEAD_INITIALIZER(threads);
+
+#endif

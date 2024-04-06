@@ -1,4 +1,3 @@
-#include "thread.h"
 #include <stdio.h>
 #include <assert.h>
 #include "global.h"
