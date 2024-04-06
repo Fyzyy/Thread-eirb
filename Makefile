@@ -5,6 +5,7 @@ SRCDIR = src
 BUILDDIR = build
 EXDIR = examples
 TSTDIR = tst
+INSTALLDIR = install
 
 SOURCES := $(wildcard $(SRCDIR)/*.c)
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.c=.o))
@@ -14,10 +15,9 @@ TST := $(wildcard $(TSTDIR)/*.c)
 EXECUTABLES_EXAMPLES := $(patsubst $(EXDIR)/%,$(BUILDDIR)/%,$(EXAMPLES:.c=))
 EXECUTABLES_TST := $(patsubst $(TSTDIR)/%,$(BUILDDIR)/%,$(TST:.c=))
 
-.PHONY: all check valgrind pthread install clean
+.PHONY: all check valgrind pthread examples exec install clean
 
-all: LDLIBS = -L$(BUILDDIR) -lthread  
-all: install
+all: libthread.a $(EXECUTABLES_TST)
 
 pthread: CFLAGS += -pthread -DUSE_PTHREAD
 pthread: $(EXECUTABLES_TST)
@@ -36,11 +36,11 @@ libthread.a: $(OBJECTS)
 
 $(BUILDDIR)/%: $(TSTDIR)/%.c libthread.a
 	@mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) -L$(BUILDDIR) -lthread $< -o $@
+	$(CC) $(CFLAGS)  $< -L$(BUILDDIR) -lthread -o $@
 
 $(BUILDDIR)/%: $(EXDIR)/%.c
 	@mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) -L$(BUILDDIR) -lthread $< -o $@
+	$(CC) $(CFLAGS)  $< -L$(BUILDDIR) -lthread -o $@
 
 check: $(EXECUTABLES_TST)
 	@for exe in $(EXECUTABLES_TST); do \
@@ -55,9 +55,9 @@ valgrind: $(EXECUTABLES_TST)
 
 install: $(EXECUTABLES_TST)
 	@mkdir -p $(INSTALLDIR)/lib $(INSTALLDIR)/bin
-	@cp $(BUILDDIR)/$< $(INSTALLDIR)/lib
-	@cp $(EXECUTABLES_TST) $(INSTALLDIR)/bin
+	@mv $(BUILDDIR)/libthread.a $(INSTALLDIR)/lib
+	@mv $(EXECUTABLES_TST) $(INSTALLDIR)/bin
+	@rm -rf $(BUILDDIR)
 
 clean:
 	@rm -rf $(BUILDDIR) $(INSTALLDIR)
-
