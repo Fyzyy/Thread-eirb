@@ -1,6 +1,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#include <stdio.h>
 #include <stddef.h>
 #include <ucontext.h>
 #include <sys/queue.h>
@@ -9,6 +10,7 @@
 #include "thread.h"
 
 #define STACK_SIZE 8192
+#define MAX_THREADS 100
 
 typedef struct struct_thread_t{
     thread_t id; // Identifiant du thread
@@ -22,11 +24,14 @@ typedef struct struct_thread_t{
 } struct_thread_t;
 
 STAILQ_HEAD(thread_list, struct_thread_t);
-extern struct thread_list threads;
+extern struct thread_list running_threads;
 
 
 extern struct_thread_t main_thread;
 extern struct_thread_t *current_thread;
+
+extern struct_thread_t* storage[MAX_THREADS];
+extern size_t storage_size;
 
 struct_thread_t* id_to_struct(thread_t id);
 

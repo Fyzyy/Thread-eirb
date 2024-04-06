@@ -1,30 +1,26 @@
 #include "global.h"
 
+struct_thread_t* policy_fifo(void) {
+    struct_thread_t *thread = STAILQ_FIRST(&running_threads);
+    STAILQ_REMOVE_HEAD(&running_threads, entries);
+    STAILQ_INSERT_TAIL(&running_threads, thread, entries);
+    return STAILQ_FIRST(&running_threads);
+}
+
 int thread_yield(void) {
 
-    if (STAILQ_EMPTY(&threads)) {
-        current_thread = &main_thread;
+    if (STAILQ_FIRST(&running_threads) == &main_thread && STAILQ_NEXT(STAILQ_FIRST(&running_threads), entries) == NULL) {
+        //printf("No other thread to run\n");
         return 0;
     }
 
-    struct_thread_t *next_thread = NULL;
     struct_thread_t *thread = current_thread;
 
-    STAILQ_FOREACH(next_thread, &threads, entries) {
-        if (next_thread->id == thread->id) {
-            break;
-        }
-    }
+    current_thread = policy_fifo(); //next thread to run
 
-    if (next_thread == NULL) {
-        next_thread = STAILQ_FIRST(&threads);
-        return 0;
-    }
 
-    STAILQ_REMOVE(&threads, next_thread, struct_thread_t, entries);
-    STAILQ_INSERT_TAIL(&threads, next_thread, entries);
-
-    swapcontext(&(thread->context), &(next_thread->context));
+    //printf("Switching from thread %p to thread %p\n", thread, current_thread);
+    swapcontext(&(thread->context), &(current_thread->context));
 
     return 0;
 }
