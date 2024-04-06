@@ -5,7 +5,7 @@
 
 
 
-struct thread_list threads;
+struct thread_list threads = STAILQ_HEAD_INITIALIZER(threads);
 
 
 // Lance le thread sur la routine associée
@@ -19,7 +19,9 @@ static void thread_start(void *arg) {
 int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg) {
 
     struct_thread_t *new_struct_thread = (struct_thread_t *) malloc(sizeof(struct_thread_t));
-    new_struct_thread->id = newthread;
+
+    if (new_struct_thread == NULL)
+        return -1;
 
     char *stack;
     stack = (char *) malloc(STACK_SIZE);
@@ -28,6 +30,7 @@ int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg
         return -1;
 
     getcontext(&new_struct_thread->context);
+    new_struct_thread->id = *newthread;
     new_struct_thread->context.uc_stack.ss_sp = stack;
     new_struct_thread->context.uc_stack.ss_size = STACK_SIZE;
     new_struct_thread->context.uc_link = &main_thread.context;
@@ -35,9 +38,9 @@ int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg
     new_struct_thread->arg = arg;
     new_struct_thread->finished = 0;
 
-    STAILQ_INSERT_TAIL(&threads, &main_thread, entries);
+    STAILQ_INSERT_TAIL(&threads, new_struct_thread, entries);
 
-    makecontext(&new_struct_thread->context, (void (*)())thread_start, 1, new_struct_thread);
+    makecontext(&new_struct_thread->context, (void (*)())thread_start, 1, new_struct_thread->arg);
 
     return 0;
 }

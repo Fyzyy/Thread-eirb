@@ -17,7 +17,8 @@ int thread_yield(void) {
     }
 
     if (next_thread == NULL) {
-        return -1;
+        next_thread = STAILQ_FIRST(&threads);
+        return 0;
     }
 
     STAILQ_REMOVE(&threads, next_thread, struct_thread_t, entries);
