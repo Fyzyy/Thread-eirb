@@ -12,7 +12,6 @@ SOURCES := $(wildcard $(SRCDIR)/*.c)
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.c=.o))
 EXAMPLES := $(wildcard $(EXDIR)/*.c)
 TST := $(wildcard $(TSTDIR)/*.c)
-TST_PTHREAD := $(TST:.c=-pthread)
 
 EXECUTABLES_EXAMPLES := $(patsubst $(EXDIR)/%,$(BUILDDIR)/%,$(EXAMPLES:.c=))
 EXECUTABLES_TST := $(patsubst $(TSTDIR)/%,$(BUILDDIR)/%,$(TST:.c=))
