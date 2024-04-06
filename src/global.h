@@ -1,19 +1,31 @@
-#include "queue.h"
-#include "thread.h"
+#ifndef GLOBAL_H
+#define GLOBAL_H
+
 #include <stddef.h>
 #include <ucontext.h>
+#include <sys/queue.h>
+#include <stdlib.h>
 
-struct struct_thread_t {
-  thread_t id;
-  ucontext_t context;
-  int stack_id;
-  void *ret_val;
-};
+#include "thread.h"
 
-typedef struct node {
-  struct struct_thread_t thread;
-  SIMPLEQ_ENTRY(node) nodes;
-} node_t;
+#define STACK_SIZE 8192
 
-STAILQ_HEAD(thread_queue, struct_thread_t)
-threads = STAILQ_HEAD_INITIALIZER(threads);
+typedef struct struct_thread_t{
+    thread_t id; // Identifiant du thread
+    ucontext_t context; // Contexte du thread
+    void *(*start_routine)(void *); // Fonction à exécuter
+    void *arg; // Argument de la fonction
+    void *retval; // Valeur de retour
+    int finished; // Indicateur de terminaison du thread
+    STAILQ_ENTRY(struct_thread_t) entries;
+
+} struct_thread_t;
+
+STAILQ_HEAD(thread_list, struct_thread_t);
+extern struct thread_list threads;
+
+
+extern struct_thread_t main_thread;
+extern struct_thread_t *current_thread;
+
+#endif // GLOBAL_H

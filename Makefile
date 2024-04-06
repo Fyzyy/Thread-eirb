@@ -33,15 +33,18 @@ libthread.a: $(OBJECTS)
 	@mkdir -p $(BUILDDIR)
 	ar rcs $(BUILDDIR)/$@ $^
 
+# Test with libthread
 $(BUILDDIR)/%: $(TSTDIR)/%.c libthread.a
 	@mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) $< -L$(BUILDDIR) -lthread -o $@
 
+# Test with pthread
 $(BUILDDIR)/%-pthread: $(TSTDIR)/%.c libthread.a
 	@mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) $(PTHREAD_FLAGS) $< -L$(BUILDDIR) -lthread -o $@
 
-$(BUILDDIR)/%: $(EXDIR)/%.c
+# Examples
+$(BUILDDIR)/%: $(EXDIR)/%.c libthread.a
 	@mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS)  $< -L$(BUILDDIR) -lthread -o $@
 
