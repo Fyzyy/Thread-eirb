@@ -3,10 +3,27 @@
 
 #include "global.h"
 
-struct thread_list running_threads = STAILQ_HEAD_INITIALIZER(running_threads);
+struct_thread_t main_thread = {
+    .id = &main_thread,
+    .context = {0},
+    .start_routine = NULL,
+    .arg = NULL,
+    .retval = NULL,
+    .finished = 0
+};
 
-struct_thread_t* storage[MAX_THREADS];
-size_t storage_size = 0;
+struct_thread_t *current_thread = &main_thread;
+
+struct thread_list running_threads = STAILQ_HEAD_INITIALIZER(running_threads);
+struct thread_list finished_threads = STAILQ_HEAD_INITIALIZER(finished_threads);
+
+
+
+// Lance le thread sur la routine associée
+static void thread_start(void *arg) {
+    struct_thread_t *thread = (struct_thread_t *)arg;
+    thread->retval = thread->start_routine(thread->arg);
+}
 
 int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg) {
 
@@ -17,10 +34,10 @@ int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg
 
     char *stack;
     stack = (char *) malloc(STACK_SIZE);
-
     if (stack == NULL)
         return -1;
-
+    
+    getcontext(&new_struct_thread->context);
     new_struct_thread->id = *newthread;
     new_struct_thread->context.uc_stack.ss_sp = stack;
     new_struct_thread->context.uc_stack.ss_size = STACK_SIZE;
@@ -30,9 +47,11 @@ int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg
     new_struct_thread->finished = 0;
     new_struct_thread->retval = NULL;
 
-    storage[storage_size++] = new_struct_thread;
+    if STAILQ_EMPTY(&running_threads)
+        STAILQ_INSERT_TAIL(&running_threads, &main_thread, entries);
+    STAILQ_INSERT_TAIL(&running_threads, new_struct_thread, entries);
 
-
-
+    makecontext(&new_struct_thread->context, (void (*)(void)) thread_start, 1, new_struct_thread);
+ 
     return 0;
 }

@@ -25,14 +25,10 @@ typedef struct struct_thread_t{
 
 STAILQ_HEAD(thread_list, struct_thread_t);
 extern struct thread_list running_threads;
+extern struct thread_list finished_threads;
 
 
 extern struct_thread_t main_thread;
 extern struct_thread_t *current_thread;
-
-extern struct_thread_t* storage[MAX_THREADS];
-extern size_t storage_size;
-
-struct_thread_t* id_to_struct(thread_t id);
 
 #endif // GLOBAL_H
