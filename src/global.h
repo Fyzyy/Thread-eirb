@@ -6,11 +6,14 @@
 #include <ucontext.h>
 #include <sys/queue.h>
 #include <stdlib.h>
+#include <sys/time.h>
+#include <signal.h>
 
 #include "thread.h"
 
 #define STACK_SIZE 8192
-#define MAX_THREADS 100
+
+//STRUCTURE THREAD
 
 typedef struct struct_thread_t{
     thread_t id; // Identifiant du thread
@@ -18,17 +21,44 @@ typedef struct struct_thread_t{
     void *(*start_routine)(void *); // Fonction à exécuter
     void *arg; // Argument de la fonction
     void *retval; // Valeur de retour
-    int finished; // Indicateur de terminaison du thread
     STAILQ_ENTRY(struct_thread_t) entries;
 
 } struct_thread_t;
 
-STAILQ_HEAD(thread_list, struct_thread_t);
-extern struct thread_list running_threads;
-extern struct thread_list finished_threads;
-
+// MAIN THREAD
 
 extern struct_thread_t main_thread;
 extern struct_thread_t *current_thread;
+extern int cancel_current;
+extern int init;
+
+// TIME
+
+extern struct itimerval timer;
+extern long period_t;
+extern void start_time(void);
+extern void stop_time(void);
+
+// QUEUE
+STAILQ_HEAD(thread_list, struct_thread_t);
+
+extern struct thread_list ready_threads;
+extern struct thread_list finished_threads;
+
+extern void enqueue(struct thread_list* list, struct_thread_t* thread);
+extern struct_thread_t* dequeue(struct thread_list* list);
+extern int remove_thread(struct thread_list* list, struct_thread_t* thread);
+extern int size(struct thread_list* list);
+extern int is_empty(struct thread_list* list);
+extern void print_queue(struct thread_list* list);
+
+extern struct_thread_t* search_by_id(struct thread_list* list ,thread_t id);
+
+// THREAD
+
+extern void scheduler(void);
+extern void init_thread(void);
+extern int thread_cancel(thread_t thread);
+
 
 #endif // GLOBAL_H
