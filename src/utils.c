@@ -42,7 +42,10 @@ void enqueue(struct thread_list* list, struct_thread_t* thread) {
 }
 
 struct_thread_t* dequeue(struct thread_list* list) {
-    struct_thread_t *thread = STAILQ_FIRST(list);
+    if (STAILQ_EMPTY(list)) {
+        return NULL;
+    }
+    struct_thread_t *thread = (struct_thread_t*) STAILQ_FIRST(list);
     STAILQ_REMOVE_HEAD(list, entries);
     return thread;
 }
