@@ -27,8 +27,9 @@ int thread_join(thread_t thread, void **retval){
         STAILQ_REMOVE(&finished_threads, thread_to_end, struct_thread_t, entries);
         free(thread_to_end->context.uc_stack.ss_sp);
         free(thread_to_end);
+        thread_yield();
         return 0;
-        
+
     }
 
     while (!thread_to_join->finished) {
