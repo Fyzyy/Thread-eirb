@@ -22,8 +22,7 @@ struct thread_list finished_threads = STAILQ_HEAD_INITIALIZER(finished_threads);
 // Lance le thread sur la routine associée
 static void thread_start(void *arg) {
     struct_thread_t *thread = (struct_thread_t *)arg;
-    thread->retval = thread->start_routine(thread->arg);
-    thread->finished = 1;
+    thread_exit(thread->start_routine(thread->arg));
 }
 
 int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg) {
