@@ -19,7 +19,7 @@ int thread_cancel(thread_t thread) {
 }
 
 
-void thread_exit(void *retval) {
+__attribute__ ((__noreturn__)) void thread_exit(void *retval) {
 
     current_thread->retval = retval;
     enqueue(&finished_threads, current_thread);
