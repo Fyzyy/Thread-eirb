@@ -27,7 +27,6 @@ int thread_join(thread_t thread, void **retval){
         STAILQ_REMOVE(&finished_threads, thread_to_end, struct_thread_t, entries);
         free(thread_to_end->context.uc_stack.ss_sp);
         free(thread_to_end);
-        thread_yield();
         return 0;
 
     }
@@ -43,7 +42,7 @@ int thread_join(thread_t thread, void **retval){
 
         // Add the current thread to the finished_threads list
         STAILQ_INSERT_TAIL(&finished_threads, thread_to_join, entries);
-
+        
         // Switch to the context of the thread's successor
         setcontext(thread_to_join->context.uc_link);
     }
