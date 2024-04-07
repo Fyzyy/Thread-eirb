@@ -15,7 +15,7 @@ void init_thread() {
     timer.it_interval.tv_sec = 0;
     timer.it_interval.tv_usec = 10000;
     start_time();
-    signal(SIGVTALRM, scheduler);
+    signal(SIGVTALRM, (void (*)(int)) scheduler);
 
     getcontext(&main_thread.context);
     current_thread = &main_thread;
