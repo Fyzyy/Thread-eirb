@@ -13,17 +13,7 @@ int thread_cancel(thread_t thread) {
         return -1;
     }
 
-    else {
-        remove_thread(&ready_threads, thread_to_cancel);
-        free(thread_to_cancel->context.uc_stack.ss_sp);
-        free(thread_to_cancel);
-    }
-
-    if (thread_to_cancel == thread_self()) {
-        cancel_current = 1;
-        scheduler();
-        return 0;
-    }
+    remove_thread(&ready_threads, thread_to_cancel);
 
     return 0;
 }
@@ -32,9 +22,8 @@ int thread_cancel(thread_t thread) {
 void thread_exit(void *retval) {
 
     current_thread->retval = retval;
-
     enqueue(&finished_threads, current_thread);
-    remove_thread(&ready_threads, current_thread);
     thread_cancel(thread_self());
-
+    scheduler();
+    __builtin_unreachable();
 }

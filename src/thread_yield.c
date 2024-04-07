@@ -4,11 +4,6 @@ void scheduler () {
     struct_thread_t *prev , *next = NULL;
     stop_time();
 
-	if ( getcontext(&main_thread.context) == -1 ) {
-		printf("Error while getting context\n");
-		exit(EXIT_FAILURE);
-	}
-
     prev = current_thread;
 
     if (!cancel_current) {

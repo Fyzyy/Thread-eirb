@@ -47,7 +47,7 @@ int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg
     new_struct_thread->id = *newthread;
     new_struct_thread->context.uc_stack.ss_sp = stack;
     new_struct_thread->context.uc_stack.ss_size = STACK_SIZE;
-    new_struct_thread->context.uc_link = &main_thread.context;
+    new_struct_thread->context.uc_link = &current_thread->context;
     new_struct_thread->start_routine = start_routine;
     new_struct_thread->arg = arg;
     new_struct_thread->retval = NULL;
