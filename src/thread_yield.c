@@ -20,12 +20,12 @@ struct_thread_t* policy_fifo(void) {
 
 int thread_yield(void) {
 
-    struct_thread_t *thread = current_thread;
+    struct_thread_t *old_thread = current_thread;
 
     current_thread = policy_fifo(); //next thread to run
 
     //printf("Switching from thread %p to thread %p\n", thread, current_thread);
-    swapcontext(&(thread->context), &(current_thread->context));
+    swapcontext(&(old_thread->context), &(current_thread->context));
 
     return 0;
 }
