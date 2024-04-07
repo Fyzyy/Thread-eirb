@@ -1,5 +1,5 @@
-#include "thread.h"
+#include "global.h"
 
-thread_t thread_self(void){
-    return 0;
+thread_t thread_self() {
+    return current_thread->id;
 }
