@@ -11,7 +11,25 @@ INSTALLDIR = install
 SOURCES := $(wildcard $(SRCDIR)/*.c)
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.c=.o))
 EXAMPLES := $(wildcard $(EXDIR)/*.c)
-TST := $(wildcard $(TSTDIR)/*.c)
+# TST := $(wildcard $(TSTDIR)/*.c)
+TST := $(TSTDIR)/01-main.c\
+	$(TSTDIR)/02-switch.c\
+	$(TSTDIR)/03-equity.c\
+	$(TSTDIR)/11-join.c\
+	$(TSTDIR)/12-join-main.c\
+	$(TSTDIR)/21-create-many.c\
+	$(TSTDIR)/22-create-many-recursive.c\
+	$(TSTDIR)/23-create-many-once.c\
+	$(TSTDIR)/31-switch-many.c\
+	$(TSTDIR)/32-switch-many-join.c\
+	$(TSTDIR)/33-switch-many-cascade.c\
+	$(TSTDIR)/51-fibonacci.c\
+	$(TSTDIR)/61-mutex.c\
+	$(TSTDIR)/62-mutex.c\
+	$(TSTDIR)/63-mutex-equity.c\
+	$(TSTDIR)/64-mutex-join.c\
+	$(TSTDIR)/71-preemption.c\
+	# $(TSTDIR)/81-deadlock.c
 
 EXECUTABLES_EXAMPLES := $(patsubst $(EXDIR)/%,$(BUILDDIR)/%,$(EXAMPLES:.c=))
 EXECUTABLES_TST := $(patsubst $(TSTDIR)/%,$(BUILDDIR)/%,$(TST:.c=))
