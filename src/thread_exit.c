@@ -7,13 +7,7 @@
 
 
 int thread_cancel(thread_t thread) {
-    struct_thread_t *thread_to_cancel = search_by_id(&ready_threads, thread);
-
-    if (thread_to_cancel == NULL) {
-        return -1;
-    }
-
-    remove_thread(&ready_threads, thread_to_cancel);
+    STAILQ_REMOVE(&finished_threads, thread, struct_thread_t, entries);
 
     return 0;
 }

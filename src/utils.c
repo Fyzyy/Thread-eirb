@@ -8,13 +8,6 @@ struct_thread_t main_thread = {
     .retval = NULL,
 };
 
-struct_thread_t *current_thread = &main_thread;
-int cancel_current = 0;
-
-struct thread_list ready_threads = STAILQ_HEAD_INITIALIZER(ready_threads);
-struct thread_list finished_threads = STAILQ_HEAD_INITIALIZER(finished_threads);
-
-
 /*Timer starting*/
 long period_t;
 struct itimerval timer;
@@ -25,6 +18,12 @@ void start_time() {
 void stop_time() {
 	setitimer(ITIMER_VIRTUAL, 0, 0);
 }
+
+struct thread_list finished_threads = STAILQ_HEAD_INITIALIZER(finished_threads);
+struct_thread_t *current_thread = &main_thread;
+int cancel_current = 0;
+
+struct thread_list ready_threads = STAILQ_HEAD_INITIALIZER(ready_threads);
 
 
 struct_thread_t* search_by_id(struct thread_list* list ,thread_t id) {

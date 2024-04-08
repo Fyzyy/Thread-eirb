@@ -1,5 +1,4 @@
 #include "global.h"
-#include <valgrind/valgrind.h>
 
 int thread_join(thread_t thread, void **retval){
 

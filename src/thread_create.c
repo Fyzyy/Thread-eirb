@@ -39,7 +39,8 @@ int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg
         return -1;
 
     getcontext(&new_struct_thread->context);
-    new_struct_thread->id = *newthread;
+    new_struct_thread->id = new_struct_thread;
+    *newthread = new_struct_thread->id;
     new_struct_thread->context.uc_stack.ss_size = STACK_SIZE;
 
     new_struct_thread->context.uc_stack.ss_sp = malloc(new_struct_thread->context.uc_stack.ss_size);
