@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "global.h"
+#include "thread.h"
 
 int thread_mutex_init(thread_mutex_t *mutex) {
   if (mutex == NULL) {
@@ -23,11 +24,13 @@ int thread_mutex_destroy(thread_mutex_t *mutex) {
 
 int thread_mutex_lock(thread_mutex_t *mutex) {
   while (__sync_lock_test_and_set(&(mutex->dummy), 1)) {
-    ucontext_t current_context;
-    getcontext(&current_context);
-
-    makecontext(&(current_context), (void (*)(void))thread_mutex_lock, 1,
-                mutex);
+    // ucontext_t current_context;
+    // getcontext(&current_context);
+    //
+    // makecontext(&(current_context), (void (*)(void))thread_mutex_lock, 1,
+    // mutex,
+    //             NULL);
+    thread_yield();
   }
   // printf("locked\n");
   return 0;

@@ -43,6 +43,8 @@ int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg
     new_struct_thread->context.uc_stack.ss_size = STACK_SIZE;
 
     new_struct_thread->context.uc_stack.ss_sp = malloc(new_struct_thread->context.uc_stack.ss_size);
+    int valgrind_stackid = VALGRIND_STACK_REGISTER(new_struct_thread->context.uc_stack.ss_sp, new_struct_thread->context.uc_stack.ss_sp + new_struct_thread->context.uc_stack.ss_size);
+    new_struct_thread->stack_id = valgrind_stackid;
     if (new_struct_thread->context.uc_stack.ss_sp == NULL) {
         free(new_struct_thread);
         return -1;
