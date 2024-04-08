@@ -14,6 +14,14 @@ void init_thread() {
     timer.it_value.tv_usec = 10000;
     timer.it_interval.tv_sec = 0;
     timer.it_interval.tv_usec = 10000;
+
+    main_thread.id = &main_thread;
+    main_thread.context.uc_stack.ss_size = STACK_SIZE;
+    main_thread.context.uc_stack.ss_sp = malloc(main_thread.context.uc_stack.ss_size);
+    main_thread.context.uc_link = NULL;
+    main_thread.stack_id = VALGRIND_STACK_REGISTER(main_thread.context.uc_stack.ss_sp, main_thread.context.uc_stack.ss_sp + main_thread.context.uc_stack.ss_size);
+    printf("Main thread id: %p\n", main_thread.id);
+
     current_thread = &main_thread;
 
     start_time();
