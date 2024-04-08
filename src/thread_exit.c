@@ -1,11 +1,29 @@
-#include "global.h"
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-void thread_exit(void *retval) {
+#include "global.h"
 
-  current_thread->retval = retval;
-  current_thread->finished = 1;
-  thread_join(current_thread->id, NULL);
+
+int thread_cancel(thread_t thread) {
+    struct_thread_t *thread_to_cancel = search_by_id(&ready_threads, thread);
+
+    if (thread_to_cancel == NULL) {
+        return -1;
+    }
+
+    remove_thread(&ready_threads, thread_to_cancel);
+
+    return 0;
+}
+
+
+__attribute__ ((__noreturn__)) void thread_exit(void *retval) {
+
+    current_thread->retval = retval;
+    enqueue(&finished_threads, current_thread);
+    thread_cancel(thread_self());
+    scheduler();
+    __builtin_unreachable();
 }

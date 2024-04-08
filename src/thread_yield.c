@@ -1,31 +1,38 @@
 #include "global.h"
 
-struct_thread_t* policy_fifo(void) {
+void scheduler () {
+    struct_thread_t *prev , *next = NULL;
+    stop_time();
 
-    if (STAILQ_EMPTY(&running_threads)) {
-        //printf("No thread to run\n");
-        return &main_thread;
+    prev = current_thread;
+
+    if (!cancel_current) {
+        enqueue(&ready_threads, prev);
+        //print_queue(&ready_threads);
+    } 
+    else {
+            cancel_current = 0;
     }
 
-    if (STAILQ_FIRST(&running_threads) == &main_thread && STAILQ_NEXT(STAILQ_FIRST(&running_threads), entries) == NULL) {
-        //printf("No other thread to run\n");
-        return &main_thread;
-    }    
+    next = dequeue(&ready_threads);
 
-    struct_thread_t *thread = STAILQ_FIRST(&running_threads);
-    STAILQ_REMOVE_HEAD(&running_threads, entries);
-    STAILQ_INSERT_TAIL(&running_threads, thread, entries);
-    return thread;
+    if (next == NULL) {
+		printf("No thread present in ready queue\n");
+		exit(EXIT_SUCCESS);
+	} /*No thread present in queue*/
+    
+    current_thread = next;
+    start_time();
+    
+    if (swapcontext(&(prev->context), &(next->context)) == -1 ) {
+		printf("Error while swap context\n"); /*calling the next thread*/
+	}
 }
 
 int thread_yield(void) {
-
-    struct_thread_t *old_thread = current_thread;
-
-    current_thread = policy_fifo(); //next thread to run
-
-    //printf("Switching from thread %p to thread %p\n", thread, current_thread);
-    swapcontext(&(old_thread->context), &(current_thread->context));
-
+    
+    stop_time();
+    start_time();
+    scheduler();
     return 0;
 }

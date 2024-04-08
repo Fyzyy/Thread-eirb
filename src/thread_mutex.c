@@ -1,8 +1,9 @@
-#include "global.h"
 #include <assert.h>
 #include <sched.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "global.h"
 
 int thread_mutex_init(thread_mutex_t *mutex) {
   if (mutex == NULL) {
