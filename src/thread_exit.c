@@ -30,7 +30,8 @@ __attribute__ ((__noreturn__)) void thread_exit(void *retval) {
     if (res == 0) {
         VALGRIND_STACK_DEREGISTER(former_thread->stack_id);
         free(former_thread->context.uc_stack.ss_sp);
-        free(former_thread);
+        if (former_thread != &main_thread)
+            free(former_thread);
     }
     __builtin_unreachable();
 }

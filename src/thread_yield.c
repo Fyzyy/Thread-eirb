@@ -4,6 +4,11 @@ void scheduler () {
     struct_thread_t *prev , *next = NULL;
     stop_time();
 
+    if (is_empty(&ready_threads)) {
+        //printf("No thread present in ready queue\n");
+        return ;
+    }
+
     prev = current_thread;
 
     if (cancel_current == 0) {
@@ -23,10 +28,10 @@ void scheduler () {
 	} /*No thread present in queue*/
     
     current_thread = next;
-    printf("ready ");
-    print_queue(&ready_threads);
-    printf("finished ");
-    print_queue(&finished_threads);
+    // printf("ready ");
+    // print_queue(&ready_threads);
+    // printf("finished ");
+    // print_queue(&finished_threads);
     start_time();
 
     if (prev->context.uc_stack.ss_sp == NULL) {
@@ -39,7 +44,7 @@ void scheduler () {
         exit(EXIT_FAILURE);
     } /*Error while getting stack pointer*/
     
-    printf("Switching from %p to %p\n", prev->id, next->id);
+    //printf("Switching from %p to %p\n", prev->id, next->id);
     if (swapcontext(&(prev->context), &(next->context)) == -1 ) {
 		printf("Error while swap context\n"); /*calling the next thread*/
 	}
