@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <signal.h>
+#include <valgrind/valgrind.h>
 
 #include "thread.h"
 
@@ -22,6 +23,7 @@ typedef struct struct_thread_t{
     void *arg; // Argument de la fonction
     void *retval; // Valeur de retour
     STAILQ_ENTRY(struct_thread_t) entries;
+    int stack_id;
 
 } struct_thread_t;
 
@@ -59,6 +61,4 @@ extern struct_thread_t* search_by_id(struct thread_list* list ,thread_t id);
 extern void scheduler(void);
 extern void init_thread(void);
 extern int thread_cancel(thread_t thread);
-
-
 #endif // GLOBAL_H

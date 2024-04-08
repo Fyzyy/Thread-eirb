@@ -1,11 +1,4 @@
 #include "global.h"
-<<<<<<< HEAD
-
-int thread_yield(void) {
-    if (0) {
-
-    }
-=======
 
 void scheduler () {
     struct_thread_t *prev , *next = NULL;
@@ -41,6 +34,5 @@ int thread_yield(void) {
     stop_time();
     start_time();
     scheduler();
->>>>>>> refs/remotes/origin/master
     return 0;
 }
