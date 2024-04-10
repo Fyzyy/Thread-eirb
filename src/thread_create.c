@@ -18,9 +18,8 @@ void init_thread() {
     main_thread.id = &main_thread;
     main_thread.context.uc_stack.ss_size = STACK_SIZE;
     main_thread.context.uc_stack.ss_sp = malloc(main_thread.context.uc_stack.ss_size);
-    main_thread.context.uc_link = NULL;
     main_thread.stack_id = VALGRIND_STACK_REGISTER(main_thread.context.uc_stack.ss_sp, main_thread.context.uc_stack.ss_sp + main_thread.context.uc_stack.ss_size);
-    printf("Main thread id: %p\n", main_thread.id);
+    main_thread.context.uc_link = NULL;
 
     current_thread = &main_thread;
 
