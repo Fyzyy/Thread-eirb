@@ -5,30 +5,6 @@
 
 #include "global.h"
 
-int init = 0;
-
-void init_thread() {
-    init = 1;
-
-    timer.it_value.tv_sec = 0;
-    timer.it_value.tv_usec = 10000;
-    timer.it_interval.tv_sec = 0;
-    timer.it_interval.tv_usec = 10000;
-
-    main_thread.id = &main_thread;
-    main_thread.context.uc_stack.ss_size = STACK_SIZE;
-    main_thread.context.uc_stack.ss_sp = malloc(main_thread.context.uc_stack.ss_size);
-    main_thread.stack_id = VALGRIND_STACK_REGISTER(main_thread.context.uc_stack.ss_sp, main_thread.context.uc_stack.ss_sp + main_thread.context.uc_stack.ss_size);
-    main_thread.context.uc_link = NULL;
-
-    current_thread = &main_thread;
-
-    start_time();
-    signal(SIGVTALRM, (void (*)(int)) scheduler);
-
-
-}
-
 // Lance le thread sur la routine associée
 static void thread_start(void *arg) {
     struct_thread_t *thread = (struct_thread_t *)arg;
@@ -36,10 +12,6 @@ static void thread_start(void *arg) {
 }
 
 int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg) {
-
-    if (init == 0) {
-        init_thread();
-    }
 
     struct_thread_t *new_struct_thread = (struct_thread_t *) malloc(sizeof(struct_thread_t));
     if (new_struct_thread == NULL)

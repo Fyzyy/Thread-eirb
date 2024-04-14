@@ -29,7 +29,6 @@ typedef struct struct_thread_t{
 
 // MAIN THREAD
 
-extern struct_thread_t main_thread;
 extern struct_thread_t *current_thread;
 extern int cancel_current;
 extern int init;
@@ -59,6 +58,14 @@ extern struct_thread_t* search_by_id(struct thread_list* list ,thread_t id);
 // THREAD
 
 extern void scheduler(void);
-extern void init_thread(void);
 extern int thread_cancel(thread_t thread);
+
+extern struct_thread_t * main_thread __attribute__((section(".data")));
+
+__attribute__((constructor))
+void initialize_main_thread();
+
+__attribute__((destructor))
+void destruct_main_thread();
+
 #endif // GLOBAL_H

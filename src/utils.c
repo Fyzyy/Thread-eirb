@@ -1,12 +1,40 @@
 #include "global.h"
 
-struct_thread_t main_thread = {
-    .id = &main_thread,
-    .context = {0},
-    .start_routine = NULL,
-    .arg = NULL,
-    .retval = NULL,
-};
+struct_thread_t * main_thread;
+
+struct_thread_t *current_thread;
+
+__attribute__((constructor))
+void initialize_main_thread() {
+    timer.it_value.tv_sec = 0;
+    timer.it_value.tv_usec = 10000;
+    timer.it_interval.tv_sec = 0;
+    timer.it_interval.tv_usec = 10000;
+    
+    main_thread = (struct_thread_t *) malloc(sizeof(struct_thread_t));
+
+    main_thread->id = main_thread;
+
+    getcontext(&main_thread->context);
+
+    main_thread->context.uc_stack.ss_size = STACK_SIZE;
+    main_thread->context.uc_stack.ss_sp = malloc(main_thread->context.uc_stack.ss_size);
+    int valgrind_stackid = VALGRIND_STACK_REGISTER(main_thread->context.uc_stack.ss_sp, main_thread->context.uc_stack.ss_sp + main_thread->context.uc_stack.ss_size);
+    main_thread->stack_id = valgrind_stackid;
+
+    current_thread = main_thread;
+
+    start_time();
+    signal(SIGVTALRM, (void (*)(int)) scheduler);
+
+}
+
+__attribute__((destructor))
+void destruct_main_thread() {
+    VALGRIND_STACK_DEREGISTER(main_thread->stack_id);
+    free(main_thread->context.uc_stack.ss_sp);
+    free(main_thread);
+}
 
 /*Timer starting*/
 long period_t;
@@ -20,7 +48,6 @@ void stop_time() {
 }
 
 struct thread_list finished_threads = STAILQ_HEAD_INITIALIZER(finished_threads);
-struct_thread_t *current_thread = &main_thread;
 int cancel_current = 0;
 
 struct thread_list ready_threads = STAILQ_HEAD_INITIALIZER(ready_threads);
