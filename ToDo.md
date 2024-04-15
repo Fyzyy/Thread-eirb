@@ -53,3 +53,12 @@ Dilemne :
 Commencer dans le dur avec des bas coûts mémoire et essayer de trouver un implémentation de nos threads qui permette de limiter la compléxité ?
 Ou
 Prendre un implémentation de liste simple à utiliser mais coûteuse en mémoire, quit à faire des optimisations par la suite ?
+
+## TODO
+
+- Regarder la complexité en temps
+- Fix 12
+- Fix 71
+- Fix 81
+- Modifier le Makefile pour exécuter les tests avec des arguments
+- Commencer le rapport
