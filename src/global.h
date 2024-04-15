@@ -58,8 +58,6 @@ extern struct_thread_t* search_by_id(struct thread_list* list ,thread_t id);
 // THREAD
 
 extern void scheduler(void);
-extern int thread_cancel(thread_t thread);
-
 extern struct_thread_t * main_thread __attribute__((section(".data")));
 
 __attribute__((constructor))
