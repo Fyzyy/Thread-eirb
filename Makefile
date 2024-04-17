@@ -8,6 +8,9 @@ EXDIR = examples
 TSTDIR = tst
 INSTALLDIR = install
 
+NB_THREADS_TO_CREATE=10
+NB_THREADS_TO_YIELD=10
+
 SOURCES := $(wildcard $(SRCDIR)/*.c)
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.c=.o))
 EXAMPLES := $(wildcard $(EXDIR)/*.c)
@@ -70,9 +73,7 @@ check: $(EXECUTABLES_TST)
 	./exec_test.sh;
 
 valgrind: $(EXECUTABLES_TST)
-	@for exe in $(EXECUTABLES_TST); do \
-		valgrind --leak-check=full --show-reachable=yes --track-origins=yes $$exe; \
-	done
+	./exec_test_valgrind
 
 install: $(EXECUTABLES_TST) $(EXECUTABLES_TST_PTHREAD)
 	@mkdir -p $(INSTALLDIR)/lib $(INSTALLDIR)/bin
