@@ -20,4 +20,5 @@ do
         valgrind --leak-check=full --show-reachable=yes --track-origins=yes $file; \
     fi
     echo "";
+    echo "******************************************************************************";
 done
