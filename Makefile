@@ -67,10 +67,7 @@ $(BUILDDIR)/%: $(EXDIR)/%.c libthread.a
 	$(CC) $(CFLAGS)  $< -L$(BUILDDIR) -lthread -o $@
 
 check: $(EXECUTABLES_TST)
-	@for exe in $(EXECUTABLES_TST); do \
-		echo $$exe; \
-		$$exe; \
-	done
+	./exec_test.sh;
 
 valgrind: $(EXECUTABLES_TST)
 	@for exe in $(EXECUTABLES_TST); do \
