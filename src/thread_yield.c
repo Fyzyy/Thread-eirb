@@ -3,9 +3,7 @@
 void scheduler () {
     struct_thread_t *prev , *next = NULL;
 
-    if (is_empty(&ready_threads)) {
-        exit(EXIT_SUCCESS);
-    }
+    
 
     prev = current_thread;
 
@@ -16,6 +14,10 @@ void scheduler () {
     else {
         cancel_current = 0;
         enqueue(&finished_threads, prev);
+    }
+
+    if (is_empty(&ready_threads)) {
+        exit(EXIT_SUCCESS);
     }
 
     next = dequeue(&ready_threads);
@@ -44,6 +46,7 @@ void scheduler () {
     //printf("Switching from %p to %p\n", prev->id, next->id);
     if (swapcontext(&(prev->context), &(next->context)) == -1 ) {
 		printf("Error while swap context\n"); /*calling the next thread*/
+        exit(EXIT_FAILURE);
 	}
 }
 
