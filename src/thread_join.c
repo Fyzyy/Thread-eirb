@@ -10,15 +10,15 @@ int thread_join(thread_t thread, void **retval){
         
     if (remove_thread(&finished_threads, thread_to_join) == 0) {
 
-
-
         if (retval != NULL)
             *retval = thread_to_join->retval;
-        
-        if (thread_to_join == main_thread) {
-            return 0;
-        }
 
+        if (thread_to_join == main_thread) {
+            main_thread_deleted = 1;
+        }
+        if (thread_to_join == main_thread) {
+            main_thread_deleted = 1;
+        }
         VALGRIND_STACK_DEREGISTER(thread_to_join->stack_id);
         free(thread_to_join->context.uc_stack.ss_sp);
         free(thread_to_join);

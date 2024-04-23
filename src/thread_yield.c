@@ -2,11 +2,9 @@
 
 void scheduler () {
     struct_thread_t *prev , *next = NULL;
-    stop_time();
 
     if (is_empty(&ready_threads)) {
-        //printf("No thread present in ready queue\n");
-        return ;
+        exit(EXIT_SUCCESS);
     }
 
     prev = current_thread;
@@ -32,7 +30,6 @@ void scheduler () {
     // print_queue(&ready_threads);
     // printf("finished ");
     // print_queue(&finished_threads);
-    start_time();
 
     if (prev->context.uc_stack.ss_sp == NULL) {
         printf("Error while getting stack pointer prev\n");
@@ -51,9 +48,6 @@ void scheduler () {
 }
 
 int thread_yield(void) {
-    
-    stop_time();
-    start_time();
     scheduler();
     return 0;
 }

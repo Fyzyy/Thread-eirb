@@ -4,6 +4,8 @@ struct_thread_t * main_thread;
 
 struct_thread_t *current_thread;
 
+int main_thread_deleted = 0;
+
 __attribute__((constructor))
 void initialize_main_thread() {
     timer.it_value.tv_sec = 0;
@@ -31,9 +33,9 @@ void initialize_main_thread() {
 
 __attribute__((destructor))
 void destruct_main_thread() {
-    VALGRIND_STACK_DEREGISTER(main_thread->stack_id);
-    free(main_thread->context.uc_stack.ss_sp);
-    free(main_thread);
+    VALGRIND_STACK_DEREGISTER(current_thread->stack_id);
+    free(current_thread->context.uc_stack.ss_sp);
+    free(current_thread);
 }
 
 /*Timer starting*/

@@ -8,7 +8,8 @@
 // Lance le thread sur la routine associée
 static void thread_start(void *arg) {
     struct_thread_t *thread = (struct_thread_t *)arg;
-    thread_exit(thread->start_routine(thread->arg));
+    void * retval = thread->start_routine(thread->arg);
+    thread_exit(retval);
 }
 
 int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg) {

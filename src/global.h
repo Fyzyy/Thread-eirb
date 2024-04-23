@@ -32,6 +32,7 @@ typedef struct struct_thread_t{
 extern struct_thread_t *current_thread;
 extern int cancel_current;
 extern int init;
+extern int main_thread_deleted;
 
 // TIME
 
