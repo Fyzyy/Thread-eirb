@@ -2,10 +2,8 @@
 
 void scheduler () {
     struct_thread_t *prev , *next = NULL;
-
-    
-
     prev = current_thread;
+    next = STAILQ_FIRST(&ready_threads);
 
     if (cancel_current == 0) {
         enqueue(&ready_threads, prev);
@@ -21,6 +19,8 @@ void scheduler () {
     }
 
     next = dequeue(&ready_threads);
+
+    
 
     if (next == NULL) {
 		printf("No thread present in ready queue\n");
@@ -44,10 +44,7 @@ void scheduler () {
     } /*Error while getting stack pointer*/
     
     //printf("Switching from %p to %p\n", prev->id, next->id);
-    if (swapcontext(&(prev->context), &(next->context)) == -1 ) {
-		printf("Error while swap context\n"); /*calling the next thread*/
-        exit(EXIT_FAILURE);
-	}
+    __attribute__((__unused__)) int res = swapcontext(&(prev->context), &(next->context));
 }
 
 int thread_yield(void) {

@@ -8,11 +8,6 @@ int main_thread_deleted = 0;
 
 __attribute__((constructor))
 void initialize_main_thread() {
-    timer.it_value.tv_sec = 0;
-    timer.it_value.tv_usec = 10000;
-    timer.it_interval.tv_sec = 0;
-    timer.it_interval.tv_usec = 10000;
-    
     main_thread = (struct_thread_t *) malloc(sizeof(struct_thread_t));
 
     main_thread->id = main_thread;
@@ -27,7 +22,7 @@ void initialize_main_thread() {
     current_thread = main_thread;
 
     start_time();
-    signal(SIGVTALRM, (void (*)(int)) scheduler);
+    //signal(SIGVTALRM, (void (*)(int)) scheduler);
 
 }
 
