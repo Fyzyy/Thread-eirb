@@ -27,7 +27,7 @@ void initialize_main_thread() {
     current_thread = main_thread;
 
     start_time();
-    signal(SIGVTALRM, (void (*)(int)) scheduler);
+    // signal(SIGVTALRM, (void (*)(int)) scheduler);
 
 }
 
