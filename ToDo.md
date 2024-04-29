@@ -1,28 +1,5 @@
 # To Do List
 
-## Makefile
-
-Max
-
-## Thread.h
-
-- create -> achille
-- exit -> robin
-- join -> le bel homme charnu
-- self -> achille
-- yield -> corentin
-
-## Interfaces
-
-- lock -> Ilyes
-- unlock -> Ilyes
-
-## Autre
-
-- Réussir à compiler example.c avec pthread
-- Faire la structure des threads
-- Choisir liste
-
 ## Quelle liste prendre ?
 
 - Singly-linked list ->
@@ -57,8 +34,11 @@ Prendre un implémentation de liste simple à utiliser mais coûteuse en mémoir
 ## TODO
 
 - Regarder la complexité en temps
-- Fix 12
+- Fix Valgrind 12
+- Fix Valgrind 62
 - Fix 71
 - Fix 81
-- Modifier le Makefile pour exécuter les tests avec des arguments
+- Gérer la préemption -> attention au temps d'exécution
+- Gérer les deadlocks
+- Nettoyer un peu le code
 - Commencer le rapport
