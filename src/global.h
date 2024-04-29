@@ -2,12 +2,12 @@
 #define GLOBAL_H
 
 #include <stdio.h>
-#include <stddef.h>
-#include <ucontext.h>
-#include <sys/queue.h>
 #include <stdlib.h>
-#include <sys/time.h>
+#include <stddef.h>
 #include <signal.h>
+#include <ucontext.h>
+#include <sys/time.h>
+#include <sys/queue.h>
 #include <valgrind/valgrind.h>
 
 #include "thread.h"
@@ -42,6 +42,7 @@ extern void start_time(void);
 extern void stop_time(void);
 
 // QUEUE
+
 STAILQ_HEAD(thread_list, struct_thread_t);
 
 extern struct thread_list ready_threads;
