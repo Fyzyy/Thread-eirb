@@ -42,7 +42,7 @@ EXECUTABLES_TST_PTHREAD := $(patsubst $(TSTDIR)/%,$(BUILDDIR)/%,$(TST:.c=-pthrea
 
 all: libthread.a $(EXECUTABLES_TST)
 
-pthread: libthread.a $(EXECUTABLES_TST_PTHREAD)
+pthreads: libthread.a $(EXECUTABLES_TST_PTHREAD)
 
 examples: $(EXECUTABLES_EXAMPLES)
 
