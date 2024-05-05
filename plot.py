@@ -1,8 +1,11 @@
 import subprocess
 import matplotlib.pyplot as plt
 import os
-import random
 import time
+
+# Create a folder to save plots if it doesn't exist
+if not os.path.exists("plots"):
+    os.makedirs("plots")
 
 # Récupérer la liste des fichiers exécutables dans le répertoire "build"
 executables = [f for f in os.listdir("build") if os.path.isfile(
@@ -17,10 +20,9 @@ num_arguments = int(
     input("Entrez le nombre d'arguments à tester (par défaut 5): ") or 5)
 
 for exe in executables:
-    arguments_to_test = random.sample(range(1, 20), num_arguments)
-    second_arg = 5
-    for arg in arguments_to_test:
+    for arg in range(num_arguments + 1):
         try:
+            second_arg = 5
             if exe.startswith(("31", "32", "33")):
                 start_time = time.time()  # Temps de début de l'exécution
                 subprocess.run(["./build/" + exe, str(arg), str(second_arg)],
@@ -33,6 +35,13 @@ for exe in executables:
                                stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL, check=True)
                 end_time = time.time()  # Temps de fin de l'exécution
                 execution_time_pthread = end_time - start_time  # Calcul de la durée d'exécution
+
+                execution_times_thread.setdefault(
+                    exe, []).append(execution_time_thread)
+                execution_times_pthread.setdefault(
+                    exe, []).append(execution_time_pthread)
+            elif exe.startswith(("81")):
+                continue
             else:
                 start_time = time.time()  # Temps de début de l'exécution
                 subprocess.run(["./build/" + exe, str(arg)],
@@ -46,30 +55,28 @@ for exe in executables:
                 end_time = time.time()  # Temps de fin de l'exécution
                 execution_time_pthread = end_time - start_time  # Calcul de la durée d'exécution
 
-            execution_times_thread.setdefault(
-                exe, []).append((arg, execution_time_thread))
-            execution_times_pthread.setdefault(
-                exe, []).append((arg, execution_time_pthread))
+                execution_times_thread.setdefault(
+                    exe, []).append(execution_time_thread)
+                execution_times_pthread.setdefault(
+                    exe, []).append(execution_time_pthread)
         except subprocess.CalledProcessError as e:
             print(
                 f"Erreur lors de l'exécution de '{exe}' avec l'argument '{arg}': {e.output}")
 
-plt.figure(figsize=(16, 8))
-
-for exe, times in execution_times_thread.items():
-    args, durations = zip(*times)
-    args_sorted, durations_sorted = zip(*sorted(zip(args, durations)))
-    plt.plot(args_sorted, durations_sorted, marker='o', label=exe + "_thread")
-
-for exe, times in execution_times_pthread.items():
-    args, durations = zip(*times)
-    args_sorted, durations_sorted = zip(*sorted(zip(args, durations)))
-    plt.plot(args_sorted, durations_sorted, marker='o', label=exe + "_pthread")
-
-plt.xlabel('Argument')
-plt.ylabel('Durée d\'exécution (s)')
-plt.title('Durée d\'exécution des programmes avec différents arguments')
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
-plt.show()
+for exe, durations_thread in execution_times_thread.items():
+    durations_pthread = execution_times_pthread.get(exe, [])
+    num_threads = len(durations_thread)
+    num_pthreads = len(durations_pthread)
+    min_len = min(num_threads, num_pthreads)
+    plt.plot(range(min_len),
+             durations_thread[:min_len], '-bo', label=exe+"_thread")
+    plt.plot(range(min_len),
+             durations_pthread[:min_len], '-ro', label=exe+"_pthread")
+    plt.xlabel('Nombre de tests')
+    plt.ylabel('Durée d\'exécution (s)')
+    plt.title('Durée d\'exécution des programmes avec différents arguments')
+    plt.legend()
+    plt.grid(True)
+    plt.savefig(f"plots/{exe}.png")
+    plt.close()
+    plt.show()
