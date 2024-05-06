@@ -72,8 +72,8 @@ $(BUILDDIR)/%: $(EXDIR)/%.c libthread.a
 check: $(EXECUTABLES_TST)
 	./exec_test.sh;
 
-valgrind: $(EXECUTABLES_TST)
-	./exec_test_valgrind.sh
+valgrind: 
+	./exec_test_valgrind.sh $(EXECUTABLES_TST)
 
 install: $(EXECUTABLES_TST) $(EXECUTABLES_TST_PTHREAD)
 	@mkdir -p $(INSTALLDIR)/lib $(INSTALLDIR)/bin
