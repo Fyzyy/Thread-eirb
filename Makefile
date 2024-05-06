@@ -82,8 +82,5 @@ install: $(EXECUTABLES_TST) $(EXECUTABLES_TST_PTHREAD)
 	@mv $(EXECUTABLES_TST_PTHREAD) $(INSTALLDIR)/bin
 	@rm -rf $(BUILDDIR)
 
-graphs: all pthreads
-	taskset -c 1 python3 plot.py
-
 clean:
 	@rm -rf $(BUILDDIR) $(INSTALLDIR)
