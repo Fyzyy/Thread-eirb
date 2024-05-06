@@ -70,7 +70,7 @@ $(BUILDDIR)/%: $(EXDIR)/%.c libthread.a
 	$(CC) $(CFLAGS)  $< -L$(BUILDDIR) -lthread -o $@
 
 check: $(EXECUTABLES_TST)
-	./exec_test.sh;
+	./exec_test.sh $(EXECUTABLES_TST);
 
 valgrind: 
 	./exec_test_valgrind.sh $(EXECUTABLES_TST)
