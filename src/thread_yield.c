@@ -3,7 +3,6 @@
 void scheduler () {
     struct_thread_t *prev , *next = NULL;
     prev = current_thread;
-    next = STAILQ_FIRST(&ready_threads);
 
     if (cancel_current == 0) {
         enqueue(&ready_threads, prev);

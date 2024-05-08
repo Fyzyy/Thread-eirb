@@ -9,7 +9,7 @@ int main_thread_deleted = 0;
 int pause_current = 0;
 
 /*Timer starting*/
-struct itimerval timer = {.it_interval = {0, 50}, .it_value = {0, 100}};
+struct itimerval timer = {.it_interval = {0, 100}, .it_value = {0, 100}};
 void start_time() {
 	setitimer(ITIMER_VIRTUAL,&timer,0);
 }
@@ -22,7 +22,7 @@ void stop_time() {
 
 void yield() {
     printf("yield called\n");
-    yield();
+    thread_yield();
 }
 
 
@@ -46,11 +46,12 @@ void initialize_main_thread() {
 
   current_thread = main_thread;
 
+  signal(SIGVTALRM, yield);
   start_time();
-  // signal(SIGVTALRM, (void (*)(int)) scheduler);
 }
 
 __attribute__((destructor)) void destruct_main_thread() {
+    stop_time();
   VALGRIND_STACK_DEREGISTER(current_thread->stack_id);
   free(current_thread->context.uc_stack.ss_sp);
   free(current_thread);

@@ -25,9 +25,7 @@ int thread_join(thread_t thread, void **retval) {
     if (thread_to_join == main_thread) {
       main_thread_deleted = 1;
     }
-    if (thread_to_join == main_thread) {
-      main_thread_deleted = 1;
-    }
+
     VALGRIND_STACK_DEREGISTER(thread_to_join->stack_id);
     free(thread_to_join->context.uc_stack.ss_sp);
     free(thread_to_join);
