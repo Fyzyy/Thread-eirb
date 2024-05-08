@@ -46,7 +46,7 @@ void initialize_main_thread() {
 
   current_thread = main_thread;
 
-  signal(SIGVTALRM, yield);
+  //signal(SIGVTALRM, yield);
   start_time();
 }
 
