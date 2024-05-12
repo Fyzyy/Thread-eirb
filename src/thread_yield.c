@@ -3,7 +3,6 @@
 #include <signal.h>
 
 void scheduler () {
-    stop_time();
     struct_thread_t *prev , *next = NULL;
     prev = current_thread;
 
@@ -51,7 +50,7 @@ void scheduler () {
 }
 
 int thread_yield(void) {
-
+    stop_time();
     scheduler();
 
     return 0;

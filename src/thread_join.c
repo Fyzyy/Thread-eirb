@@ -6,9 +6,10 @@
 #define TIMEOUT_SECONDS 5
 
 int thread_join(thread_t thread, void **retval) {
-  time_t start_time = time(NULL);
+  stop_time();
+  time_t start_time_mutex = time(NULL);
   while (search_by_id(&finished_threads, thread) == NULL) {
-    if (difftime(time(NULL), start_time) > TIMEOUT_SECONDS) {
+    if (difftime(time(NULL), start_time_mutex) > TIMEOUT_SECONDS) {
       cancel_current = 1;
       dead = 1;
     }
@@ -36,10 +37,10 @@ int thread_join(thread_t thread, void **retval) {
     }
     return 0;
   }
+  
   if (dead) {
     dead = 0;
     return EDEADLK;
   }
-
   return -1;
 }

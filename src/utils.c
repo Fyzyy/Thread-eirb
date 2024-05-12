@@ -45,6 +45,7 @@ void initialize_main_thread() {
 
 __attribute__((destructor))
 void destruct_main_thread() {
+    stop_time();
     VALGRIND_STACK_DEREGISTER(current_thread->stack_id);
     free(current_thread->context.uc_stack.ss_sp);
     free(current_thread);
