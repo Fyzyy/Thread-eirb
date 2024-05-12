@@ -31,6 +31,7 @@ void destruct_main_thread() {
     VALGRIND_STACK_DEREGISTER(current_thread->stack_id);
     free(current_thread->context.uc_stack.ss_sp);
     free(current_thread);
+    exit(EXIT_SUCCESS);
 }
 
 /*Timer starting*/
