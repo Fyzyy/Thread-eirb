@@ -1,9 +1,10 @@
 #include "global.h"
 
+#include <signal.h>
+
 void scheduler () {
     struct_thread_t *prev , *next = NULL;
     prev = current_thread;
-    next = STAILQ_FIRST(&ready_threads);
 
     if (cancel_current == 0) {
         enqueue(&ready_threads, prev);
@@ -48,6 +49,21 @@ void scheduler () {
 }
 
 int thread_yield(void) {
+    sigset_t mask;
+    sigemptyset(&mask);
+    sigaddset(&mask, SIGVTALRM);
+
+    // Bloquer SIGVTALRM
+    if (sigprocmask(SIG_BLOCK, &mask, NULL) == -1) {
+        return -1;
+    }
+
     scheduler();
+
+    // Débloquer SIGVTALRM
+    if (sigprocmask(SIG_UNBLOCK, &mask, NULL) == -1) {
+        return -1;
+    }
+
     return 0;
 }

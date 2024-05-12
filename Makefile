@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g -I$(SRCDIR)
+CFLAGS = -Wall -Wextra -g -O3 -I$(SRCDIR)
 PTHREAD_FLAGS = -pthread -DUSE_PTHREAD
 
 SRCDIR = src
@@ -70,10 +70,10 @@ $(BUILDDIR)/%: $(EXDIR)/%.c libthread.a
 	$(CC) $(CFLAGS)  $< -L$(BUILDDIR) -lthread -o $@
 
 check: $(EXECUTABLES_TST)
-	./exec_test.sh;
+	./exec_test.sh $(EXECUTABLES_TST);
 
-valgrind: $(EXECUTABLES_TST)
-	./exec_test_valgrind.sh
+valgrind: 
+	./exec_test_valgrind.sh $(EXECUTABLES_TST)
 
 install: $(EXECUTABLES_TST) $(EXECUTABLES_TST_PTHREAD)
 	@mkdir -p $(INSTALLDIR)/lib $(INSTALLDIR)/bin
@@ -81,6 +81,9 @@ install: $(EXECUTABLES_TST) $(EXECUTABLES_TST_PTHREAD)
 	@mv $(EXECUTABLES_TST) $(INSTALLDIR)/bin
 	@mv $(EXECUTABLES_TST_PTHREAD) $(INSTALLDIR)/bin
 	@rm -rf $(BUILDDIR)
+
+graphs: all pthreads
+	taskset -c 1 python3 plot.py
 
 clean:
 	@rm -rf $(BUILDDIR) $(INSTALLDIR)

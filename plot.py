@@ -72,7 +72,7 @@ for exe, durations_thread in execution_times_thread.items():
              durations_thread[:min_len], '-bo', label=exe+"_thread")
     plt.plot(range(min_len),
              durations_pthread[:min_len], '-ro', label=exe+"_pthread")
-    plt.xlabel('Nombre de tests')
+    plt.xlabel('Nombre de threads')
     plt.ylabel('Durée d\'exécution (s)')
     plt.title('Durée d\'exécution des programmes avec différents arguments')
     plt.legend()
