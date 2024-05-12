@@ -2,6 +2,7 @@
 
 #include <signal.h>
 
+
 void scheduler () {
     struct_thread_t *prev , *next = NULL;
     prev = current_thread;
@@ -46,12 +47,15 @@ void scheduler () {
     
     //printf("Switching from %p to %p\n", prev->id, next->id);
     start_time();
-    __attribute__((__unused__)) int res = swapcontext(&(prev->context), &(next->context));
+    if (swapcontext(&(prev->context), &(next->context))) {
+        printf("Error while switching context\n");
+        exit(EXIT_FAILURE);
+    } /*Error while switching context*/
 }
 
 int thread_yield(void) {
     stop_time();
     scheduler();
-
+    stop_time();
     return 0;
 }

@@ -6,7 +6,7 @@
 #define TIMEOUT_SECONDS 5
 
 int thread_join(thread_t thread, void **retval) {
-  stop_time();
+
   time_t start_time_mutex = time(NULL);
   while (search_by_id(&finished_threads, thread) == NULL) {
     if (difftime(time(NULL), start_time_mutex) > TIMEOUT_SECONDS) {

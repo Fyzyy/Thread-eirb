@@ -9,6 +9,7 @@
 static void thread_start(void *arg) {
     struct_thread_t *thread = (struct_thread_t *)arg;
     void * retval = thread->start_routine(thread->arg);
+    stop_time();
     thread_exit(retval);
 }
 
