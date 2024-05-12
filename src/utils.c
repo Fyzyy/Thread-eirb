@@ -6,6 +6,23 @@ struct_thread_t *current_thread;
 
 int main_thread_deleted = 0;
 
+/*Timer starting*/
+struct itimerval timer = {.it_interval = {0, 0}, .it_value = {0, 500}};
+void start_time() {
+	setitimer(ITIMER_VIRTUAL,&timer,0);
+}
+
+void stop_time() {
+    struct itimerval stop_timer = {.it_interval = {0, 0}, .it_value = {0, 0}};
+    setitimer(ITIMER_VIRTUAL, &stop_timer, NULL);
+}
+
+
+void yield() {
+    printf("yield called\n");
+    thread_yield();
+}
+
 __attribute__((constructor))
 void initialize_main_thread() {
     main_thread = (struct_thread_t *) malloc(sizeof(struct_thread_t));
@@ -21,8 +38,8 @@ void initialize_main_thread() {
 
     current_thread = main_thread;
 
-    //start_time();
-    //signal(SIGVTALRM, (void (*)(int)) scheduler);
+    start_time();
+    signal(SIGVTALRM, yield);
 
 }
 
@@ -34,23 +51,6 @@ void destruct_main_thread() {
     exit(EXIT_SUCCESS);
 }
 //int pause_current = 0;
-
-/*Timer starting*/
-struct itimerval timer = {.it_interval = {0, 500}, .it_value = {0, 500}};
-void start_time() {
-	setitimer(ITIMER_VIRTUAL,&timer,0);
-}
-
-void stop_time() {
-    struct itimerval stop_timer = {.it_interval = {0, 0}, .it_value = {0, 0}};
-    setitimer(ITIMER_VIRTUAL, &stop_timer, NULL);
-}
-
-
-void yield() {
-    printf("yield called\n");
-    thread_yield();
-}
 
 
 

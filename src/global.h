@@ -12,7 +12,7 @@
 
 #include "thread.h"
 
-#define STACK_SIZE 8192
+#define STACK_SIZE 16384
 
 // STRUCTURE THREAD
 

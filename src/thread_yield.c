@@ -3,6 +3,7 @@
 #include <signal.h>
 
 void scheduler () {
+    stop_time();
     struct_thread_t *prev , *next = NULL;
     prev = current_thread;
 
@@ -45,12 +46,13 @@ void scheduler () {
     } /*Error while getting stack pointer*/
     
     //printf("Switching from %p to %p\n", prev->id, next->id);
+    start_time();
     __attribute__((__unused__)) int res = swapcontext(&(prev->context), &(next->context));
 }
 
 int thread_yield(void) {
 
     scheduler();
-    
+
     return 0;
 }
