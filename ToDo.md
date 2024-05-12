@@ -42,3 +42,4 @@ Prendre un implémentation de liste simple à utiliser mais coûteuse en mémoir
 - Gérer les deadlocks
 - Nettoyer un peu le code
 - Commencer le rapport
+ 
