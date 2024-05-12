@@ -6,7 +6,6 @@ struct_thread_t *current_thread;
 
 int main_thread_deleted = 0;
 
-<<<<<<< HEAD
 __attribute__((constructor))
 void initialize_main_thread() {
     main_thread = (struct_thread_t *) malloc(sizeof(struct_thread_t));
@@ -22,7 +21,7 @@ void initialize_main_thread() {
 
     current_thread = main_thread;
 
-    start_time();
+    //start_time();
     //signal(SIGVTALRM, (void (*)(int)) scheduler);
 
 }
@@ -34,9 +33,7 @@ void destruct_main_thread() {
     free(current_thread);
     exit(EXIT_SUCCESS);
 }
-=======
-int pause_current = 0;
->>>>>>> refs/remotes/origin/master
+//int pause_current = 0;
 
 /*Timer starting*/
 struct itimerval timer = {.it_interval = {0, 500}, .it_value = {0, 500}};
@@ -57,35 +54,7 @@ void yield() {
 
 
 
-__attribute__((constructor))
-void initialize_main_thread() {
-    main_thread = (struct_thread_t *) malloc(sizeof(struct_thread_t));
 
-  main_thread->id = main_thread;
-
-  getcontext(&main_thread->context);
-
-  main_thread->context.uc_stack.ss_size = STACK_SIZE;
-  main_thread->context.uc_stack.ss_sp =
-      malloc(main_thread->context.uc_stack.ss_size);
-  int valgrind_stackid =
-      VALGRIND_STACK_REGISTER(main_thread->context.uc_stack.ss_sp,
-                              main_thread->context.uc_stack.ss_sp +
-                                  main_thread->context.uc_stack.ss_size);
-  main_thread->stack_id = valgrind_stackid;
-
-  current_thread = main_thread;
-
-  //signal(SIGVTALRM, yield);
-  //start_time();
-}
-
-__attribute__((destructor)) void destruct_main_thread() {
-    //stop_time();
-  VALGRIND_STACK_DEREGISTER(current_thread->stack_id);
-  free(current_thread->context.uc_stack.ss_sp);
-  free(current_thread);
-}
 
 struct thread_list finished_threads = STAILQ_HEAD_INITIALIZER(finished_threads);
 int cancel_current = 0;
