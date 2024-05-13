@@ -40,7 +40,7 @@ for exe in executables:
                     exe, []).append(execution_time_thread)
                 execution_times_pthread.setdefault(
                     exe, []).append(execution_time_pthread)
-            elif exe.startswith(("81")):
+            elif exe.startswith(("81", "01", "02", "03", "11")):
                 continue
             else:
                 start_time = time.time()  # Temps de début de l'exécution
@@ -80,3 +80,5 @@ for exe, durations_thread in execution_times_thread.items():
     plt.savefig(f"plots/{exe}.png")
     plt.close()
     plt.show()
+
+print("Done")
