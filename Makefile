@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g -O3 -I$(SRCDIR)
+CFLAGS = -Wall -Wextra -g -Ofast -I$(SRCDIR)
 PTHREAD_FLAGS = -pthread -DUSE_PTHREAD
 
 SRCDIR = src
