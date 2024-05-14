@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g -O3 -I$(SRCDIR)
+CFLAGS = -Wall -Wextra -g -Ofast -I$(SRCDIR)
 PTHREAD_FLAGS = -pthread -DUSE_PTHREAD
 
 SRCDIR = src
@@ -72,7 +72,7 @@ $(BUILDDIR)/%: $(EXDIR)/%.c libthread.a
 check: $(EXECUTABLES_TST)
 	./exec_test.sh $(EXECUTABLES_TST);
 
-valgrind: 
+valgrind: all
 	./exec_test_valgrind.sh $(EXECUTABLES_TST)
 
 install: $(EXECUTABLES_TST) $(EXECUTABLES_TST_PTHREAD)
