@@ -35,7 +35,7 @@ __attribute__((destructor)) void destruct_main_thread() {
     getcontext(&end_context);
     VALGRIND_STACK_DEREGISTER(current_thread->stack_id);
     free(end_context.uc_stack.ss_sp);
-    free(current_thread->context.uc_stack.ss_sp);
+    // free(current_thread->context.uc_stack.ss_sp); ligne à problèmes
     free(current_thread);
   }
   else {
