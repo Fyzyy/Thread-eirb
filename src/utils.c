@@ -31,10 +31,18 @@ void yield() {
 
 
 __attribute__((destructor)) void destruct_main_thread() {
+  if (current_thread != main_thread) {
     getcontext(&end_context);
     VALGRIND_STACK_DEREGISTER(current_thread->stack_id);
     free(end_context.uc_stack.ss_sp);
+    free(current_thread->context.uc_stack.ss_sp);
     free(current_thread);
+  }
+  else {
+    VALGRIND_STACK_DEREGISTER(main_thread->stack_id);
+    free(main_thread->context.uc_stack.ss_sp);
+    free(main_thread);
+  }
 }
 //int pause_current = 0;
 
