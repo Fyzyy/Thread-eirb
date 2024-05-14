@@ -19,8 +19,7 @@ void scheduler () {
     
 
     if (next == NULL) {
-		printf("No thread present in ready queue\n");
-		exit(EXIT_SUCCESS);
+		next = current_thread;
 	} /*No thread present in queue*/
     
     current_thread = next;

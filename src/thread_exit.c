@@ -12,8 +12,6 @@ __attribute__ ((__noreturn__)) void thread_exit(void *retval) {
     remove_thread(&ready_threads, current_thread);
     if (STAILQ_EMPTY(&ready_threads)) {
         exit(EXIT_SUCCESS);
-        current_thread->context.uc_link = NULL;
-        setcontext(&current_thread->context);
     }
     else {
         thread_yield();
