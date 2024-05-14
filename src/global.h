@@ -27,6 +27,8 @@ typedef struct struct_thread_t {
 
 } struct_thread_t;
 
+extern ucontext_t end_context;
+
 // MAIN THREAD
 
 extern struct_thread_t *current_thread;

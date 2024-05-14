@@ -9,12 +9,12 @@
 static void thread_start(void *arg) {
     struct_thread_t *thread = (struct_thread_t *)arg;
     void * retval = thread->start_routine(thread->arg);
-    stop_time();
+    //stop_time();
     thread_exit(retval);
 }
 
 int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg) {
-    stop_time();
+    //stop_time();
 
     struct_thread_t *new_struct_thread = (struct_thread_t *) malloc(sizeof(struct_thread_t));
     if (new_struct_thread == NULL)
@@ -40,7 +40,7 @@ int thread_create(thread_t *newthread, void *(*start_routine)(void *), void *arg
 
     enqueue(&ready_threads, new_struct_thread);
 
-    start_time();
+    //start_time();
     makecontext(&new_struct_thread->context, (void (*)(void)) thread_start, 1, new_struct_thread);
  
     return 0;

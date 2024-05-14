@@ -6,7 +6,10 @@ struct_thread_t *current_thread;
 
 int main_thread_deleted = 0;
 
+ucontext_t end_context;
+
 /*Timer starting*/
+/*
 struct itimerval timer = {.it_interval = {0, 0}, .it_value = {0, 1000}};
 struct itimerval stop_timer = {.it_interval = {0, 0}, .it_value = {0, 0}};
 
@@ -16,7 +19,7 @@ void start_time() {
 
 void stop_time() {
     setitimer(ITIMER_VIRTUAL, &stop_timer, NULL);
-}
+}*/
 
 int call = 0;
 
@@ -26,8 +29,19 @@ void yield() {
     thread_yield();
 }
 
+
+__attribute__((destructor)) void destruct_main_thread() {
+    getcontext(&end_context);
+    VALGRIND_STACK_DEREGISTER(current_thread->stack_id);
+    free(end_context.uc_stack.ss_sp);
+    free(current_thread);
+}
+//int pause_current = 0;
+
 __attribute__((constructor))
 void initialize_main_thread() {
+    //makecontext(&end_context, *destruct_main_thread, 0);
+
     main_thread = (struct_thread_t *) malloc(sizeof(struct_thread_t));
 
     main_thread->id = main_thread;
@@ -41,20 +55,12 @@ void initialize_main_thread() {
 
     current_thread = main_thread;
 
-    signal(SIGVTALRM, yield);
-    start_time();
+    //signal(SIGVTALRM, yield);
+    //start_time();
+
+    //setcontext(&main_thread->context);
 
 }
-
-__attribute__((destructor))
-void destruct_main_thread() {
-    stop_time();
-    VALGRIND_STACK_DEREGISTER(current_thread->stack_id);
-    free(current_thread->context.uc_stack.ss_sp);
-    free(current_thread);
-    exit(EXIT_SUCCESS);
-}
-//int pause_current = 0;
 
 
 

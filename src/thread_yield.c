@@ -4,21 +4,15 @@
 
 
 void scheduler () {
-    struct_thread_t *prev , *next = NULL;
-    prev = current_thread;
 
     if (cancel_current == 0) {
-        enqueue(&ready_threads, prev);
-        //print_queue(&ready_threads);
-    } 
-    else {
+        enqueue(&ready_threads, current_thread);
         cancel_current = 0;
-        enqueue(&finished_threads, prev);
     }
 
-    if (is_empty(&ready_threads)) {
-        exit(EXIT_SUCCESS);
-    }
+
+    struct_thread_t *prev , *next = NULL;
+    prev = current_thread;
 
     next = dequeue(&ready_threads);
 
@@ -46,7 +40,8 @@ void scheduler () {
     } /*Error while getting stack pointer*/
     
     //printf("Switching from %p to %p\n", prev->id, next->id);
-    start_time();
+    // start_time();
+    
     if (swapcontext(&(prev->context), &(next->context))) {
         printf("Error while switching context\n");
         exit(EXIT_FAILURE);
@@ -54,8 +49,8 @@ void scheduler () {
 }
 
 int thread_yield(void) {
-    stop_time();
+    // stop_time();
     scheduler();
-    stop_time();
+    //stop_time();
     return 0;
 }
