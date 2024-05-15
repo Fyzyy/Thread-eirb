@@ -60,6 +60,8 @@ extern void print_queue(struct thread_list *list);
 
 extern struct_thread_t *search_by_id(struct thread_list *list, thread_t id);
 
+extern void free_thread(struct_thread_t * thread);
+
 // THREAD
 
 extern void scheduler(void);

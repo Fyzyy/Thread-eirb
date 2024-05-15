@@ -8,6 +8,8 @@ int main_thread_deleted = 0;
 
 ucontext_t end_context;
 
+int end_stack[STACK_SIZE*sizeof(int)];
+
 /*Timer starting*/
 /*
 struct itimerval timer = {.it_interval = {0, 0}, .it_value = {0, 1000}};
@@ -29,26 +31,31 @@ void yield() {
     thread_yield();
 }
 
+void free_thread(struct_thread_t * thread) {
+  VALGRIND_STACK_DEREGISTER(thread->stack_id);
+  free(thread->context.uc_stack.ss_sp);
+  //free(end_context.uc_stack.ss_sp);
+  // free(current_thread->context.uc_stack.ss_sp); ligne à problèmes
+  free(thread);
+}
 
 __attribute__((destructor)) void destruct_main_thread() {
   if (current_thread != main_thread) {
     getcontext(&end_context);
-    VALGRIND_STACK_DEREGISTER(current_thread->stack_id);
-    free(end_context.uc_stack.ss_sp);
-    // free(current_thread->context.uc_stack.ss_sp); ligne à problèmes
-    free(current_thread);
+    end_context.uc_stack.ss_size = STACK_SIZE*sizeof(int);
+    end_context.uc_link = NULL;
+    end_context.uc_stack.ss_sp = end_stack;
+    makecontext(&end_context, (void (*)(void))free_thread, 1, current_thread, NULL);
+    setcontext(&end_context);
   }
   else {
-    VALGRIND_STACK_DEREGISTER(main_thread->stack_id);
-    free(main_thread->context.uc_stack.ss_sp);
-    free(main_thread);
+    free_thread(main_thread);
   }
 }
 //int pause_current = 0;
 
 __attribute__((constructor))
 void initialize_main_thread() {
-    //makecontext(&end_context, *destruct_main_thread, 0);
 
     main_thread = (struct_thread_t *) malloc(sizeof(struct_thread_t));
 
