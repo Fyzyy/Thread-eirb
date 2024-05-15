@@ -10,12 +10,13 @@ int thread_join(thread_t thread, void **retval) {
   time_t start_time_mutex = time(NULL);
   while (search_by_id(&finished_threads, thread) == NULL) {
     if (difftime(time(NULL), start_time_mutex) > TIMEOUT_SECONDS) {
-      cancel_current = 1;
-      dead = 1;
+      if (is_empty(&finished_threads)) {
+        cancel_current = 1;
+        dead = 1;
+      }
     }
     thread_yield();
   }
-
 
   struct_thread_t *thread_to_join = search_by_id(&finished_threads, thread);
 
@@ -23,7 +24,7 @@ int thread_join(thread_t thread, void **retval) {
 
     if (retval != NULL)
       *retval = thread_to_join->retval;
-    
+
     free_thread(thread_to_join);
 
     if (dead) {
@@ -32,7 +33,7 @@ int thread_join(thread_t thread, void **retval) {
     }
     return 0;
   }
-  
+
   if (dead) {
     dead = 0;
     return EDEADLK;

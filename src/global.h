@@ -16,17 +16,6 @@
 
 // STRUCTURE THREAD
 
-typedef struct struct_thread_t {
-  thread_t id;                    // Identifiant du thread
-  ucontext_t context;             // Contexte du thread
-  void *(*start_routine)(void *); // Fonction à exécuter
-  void *arg;                      // Argument de la fonction
-  void *retval;                   // Valeur de retour
-  STAILQ_ENTRY(struct_thread_t) entries;
-  int stack_id;
-
-} struct_thread_t;
-
 extern ucontext_t end_context;
 
 // MAIN THREAD
@@ -60,7 +49,7 @@ extern void print_queue(struct thread_list *list);
 
 extern struct_thread_t *search_by_id(struct thread_list *list, thread_t id);
 
-extern void free_thread(struct_thread_t * thread);
+extern void free_thread(struct_thread_t *thread);
 
 // THREAD
 
