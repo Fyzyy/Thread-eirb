@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
 #include <assert.h>
-
 #include "thread.h"
 
 #define ARRAY_SIZE 1000000  // Taille du grand tableau
