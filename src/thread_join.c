@@ -2,15 +2,16 @@
 #include "thread.h"
 #include <errno.h>
 #include <stdio.h>
+
 #include <time.h>
-#define TIMEOUT_SECONDS 3
+#define TIMEOUT_SECONDS 2
 
 int thread_join(thread_t thread, void **retval) {
 
   time_t start_time_mutex = time(NULL);
   while (search_by_id(&finished_threads, thread) == NULL) {
     if (difftime(time(NULL), start_time_mutex) >
-        TIMEOUT_SECONDS + size(&ready_threads)) {
+        TIMEOUT_SECONDS * size(&ready_threads)) {
       if (is_empty(&finished_threads)) {
         cancel_current = 1;
         dead = 1;
@@ -21,6 +22,7 @@ int thread_join(thread_t thread, void **retval) {
       thread_yield();
     }
   }
+
   struct_thread_t *thread_to_join = search_by_id(&finished_threads, thread);
 
   if (remove_thread(&finished_threads, thread_to_join) == 0) {
