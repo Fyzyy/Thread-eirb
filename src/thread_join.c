@@ -2,7 +2,6 @@
 #include "thread.h"
 #include <errno.h>
 #include <stdio.h>
-
 #include <time.h>
 #define TIMEOUT_SECONDS 3
 
@@ -22,7 +21,6 @@ int thread_join(thread_t thread, void **retval) {
       thread_yield();
     }
   }
-
   struct_thread_t *thread_to_join = search_by_id(&finished_threads, thread);
 
   if (remove_thread(&finished_threads, thread_to_join) == 0) {
