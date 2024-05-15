@@ -103,16 +103,16 @@ void* mergesort_thread(void* arg) {
 int main() {
     int* array = (int*) malloc(ARRAY_SIZE * sizeof(int));
     if (!array) {
-        fprintf(stderr, "Memory allocation failed\n");
+        fprintf(stderr, "Erreur lors de l'allocation de la mémoire\n");
         return 1;
     }
 
-    // Initialize array with random values
+    // Initialisation du tableau
     for (int i = 0; i < ARRAY_SIZE; i++) {
         array[i] = rand() % 10000;
     }
 
-    // Quick sort with threads
+    // Quick sort
     thread_t threads[THREAD_COUNT];
     ThreadData thread_data[THREAD_COUNT];
     int segment_size = ARRAY_SIZE / THREAD_COUNT;
@@ -128,7 +128,7 @@ int main() {
         thread_join(threads[i], NULL);
     }
 
-    // Merging the sorted segments
+    // Merge des segments
     for (int size = segment_size; size < ARRAY_SIZE; size *= 2) {
         for (int left = 0; left < ARRAY_SIZE - 1; left += 2 * size) {
             int mid = left + size - 1;
@@ -137,16 +137,16 @@ int main() {
         }
     }
 
-    // Verify the array is sorted
+    // Vérification de l'état du tableau (trié ou non)
     for (int i = 1; i < ARRAY_SIZE; i++) {
         if (array[i - 1] > array[i]) {
-            fprintf(stderr, "Array is not sorted at index %d\n", i);
+            fprintf(stderr, "Tableau non trié à l'index: %d\n", i);
             free(array);
             return 1;
         }
     }
 
-    printf("Array is sorted.\n");
+    printf("Tableau trié.\n");
     free(array);
     return 0;
 }
