@@ -10,7 +10,6 @@ int thread_join(thread_t thread, void **retval) {
 
   time_t start_time_mutex = time(NULL);
   while (search_by_id(&finished_threads, thread) == NULL) {
-    printf("size %d\n", size(&ready_threads));
     if (difftime(time(NULL), start_time_mutex) >
         TIMEOUT_SECONDS + size(&ready_threads)) {
       if (is_empty(&finished_threads)) {
