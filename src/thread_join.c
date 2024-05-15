@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #include <time.h>
-#define TIMEOUT_SECONDS 3
+#define TIMEOUT_SECONDS 5
 
 int thread_join(thread_t thread, void **retval) {
 
@@ -33,6 +33,7 @@ int thread_join(thread_t thread, void **retval) {
     if (size(&ready_threads) > 0) {
       struct_thread_t *thread_to_free = dequeue(&ready_threads);
       free_thread(thread_to_free);
+      thread_yield();
     }
 
     if (dead) {
@@ -40,10 +41,6 @@ int thread_join(thread_t thread, void **retval) {
       return EDEADLK;
     }
     return 0;
-  }
-  if (size(&ready_threads) > 0) {
-    struct_thread_t *thread_to_free = dequeue(&ready_threads);
-    free_thread(thread_to_free);
   }
   if (dead) {
     dead = 0;
